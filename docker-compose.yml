@@ -4,6 +4,9 @@ services:
   app:
     build:
       context: .
+      # FOR FLAKE8
+      args:
+        - DEV=true
     ports:
       - "8000:8000"
     volumes:
