@@ -14,11 +14,19 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
+    # DB
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev && \
+    # END DB
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ "$DEV" = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt;\
     fi && \
     rm -rf /tmp && \
+    # DB
+    apk del .tmp-build-deps && \
+    # END DB
     adduser \
         --disabled-password \
         --no-create-home \
